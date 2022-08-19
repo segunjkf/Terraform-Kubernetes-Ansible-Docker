@@ -10,7 +10,7 @@ provider "aws" {
   region = "eu-west-1"
 }
 
-module "vpc" {
+module "vpc-new" {
    source = "./modules/vpc"
    subnet-cidr-block = var.subnet-cidr-block
    availability_zone = var.availability_zone
@@ -24,5 +24,7 @@ module "vpc" {
     public_key = var.public_key
     private1_key = var.private1_key
     instance_type = var.instance_type
-    security_id = modules.vpc.
+    security_id = [module.vpc-new.securit-group-id]
+    subnet_id = module.vpc-new.subnet_id_number
+    availability_zone = var.availability_zone
  }

@@ -5,4 +5,3 @@ variable "image_name" {}
 variable "public_key" {}
 variable "private1_key" {}
 variable "instance_type" {}
-variable "subnet_id" {}
