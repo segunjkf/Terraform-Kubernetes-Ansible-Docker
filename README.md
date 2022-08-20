@@ -20,7 +20,7 @@ It also displays how a simple Java application could be maintained using CI/CD o
   > **Note:** Be aware that the installation of some plugins may cause a misconfiguration of the Jenkins server and your work will be lost.
 
 
-## Terraform configuration 
+### Terraform configuration 
 * you have to install terraform plugin for jenkins (terraform)
 * you have to set your AWS Credentials on jenkins with the jenkins plugin (Credentials binding)   
 
