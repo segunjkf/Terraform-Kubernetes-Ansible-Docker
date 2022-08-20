@@ -3,7 +3,7 @@ pipeline {
 
     stages {
 
-        stage(checkout) {
+        stage("checkout") {
 
             steps{
             git branch: 'main', credentialsId: '10f2ee8f-0c24-478d-82e4-1f7e1355cfbe', url: 'https://github.com/segunjkf/Terraform-Kubernetes-Ansible-Docker'
@@ -24,7 +24,18 @@ pipeline {
                         powershell "terraform apply -auto-approve"
             }
         }
-    }
+        stage("docker images") {
+            environment{
+
+            }
+            steps{
+                
+            }
+        }
+    
+    }   
+
+
 }
 }
 } 
