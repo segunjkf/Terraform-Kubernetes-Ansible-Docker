@@ -12,13 +12,14 @@ pipeline {
         }
         
         stage('setting up infra') {
-            environment {
-                AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
-                AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
-                TF_VAR_env_prefix = 'test'
-            }
+            
             steps {
-                script { 
+                withCredentials([[
+                $class: "AmazonWebServicesCredentialsBinding",
+                credentialsId: "aws-cred",
+                accessKeyVariable: "AWS_ACCCESS_KEY_ID",
+                secretkeyVaribale: "AWS_SECRET_ACCESS_KEY"]]) {
+             
                     dir("servers-terraform") {
                         powershell "terraform init"
                         powershell "terraform apply -auto-approve"
