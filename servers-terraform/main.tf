@@ -27,4 +27,6 @@ module "vpc-new" {
     security_id = [module.vpc-new.securit-group-id]
     subnet_id = module.vpc-new.subnet_id_number
     availability_zone = var.availability_zone
+    subnet_id_2 =  module.vpc-new.subnet_id_number
+    security_id2 = [module.vpc-new.securit-group-id]
  }
