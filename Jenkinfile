@@ -24,11 +24,11 @@ pipeline {
                         powershell "terraform apply -auto-approve"
             }
             
-            stage ("building docker image"){
-                steps{
-                    script{
-                        echo "about to buld docker image"
-                        powershell "docker build -f Dockerfile -t name/kaytheog/java:${BUILD_NUMBER}"
+        stage ("building docker image"){
+            steps{
+                script{
+                    echo "about to buld docker image"
+                    powershell "docker build -f Dockerfile -t name/kaytheog/java:${BUILD_NUMBER}"
                     }
                 }
                     
