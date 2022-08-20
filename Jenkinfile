@@ -2,24 +2,23 @@ pipeline {
     agent any
 
     stages {
-        
+
         stage(checkout) {
-            
+
             steps{
             git branch: 'main', credentialsId: '10f2ee8f-0c24-478d-82e4-1f7e1355cfbe', url: 'https://github.com/segunjkf/Terraform-Kubernetes-Ansible-Docker'
         }
-        
+
         }
-        
+
         stage('setting up infra') {
-            
+            environment {
+                AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
+                AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
+                TF_VAR_env_prefix = 'test'
+            }
             steps {
-                withCredentials([[
-                $class: "AmazonWebServicesCredentialsBinding",
-                credentialsId: "aws-cred",
-                accessKeyVariable: "AWS_ACCCESS_KEY_ID",
-                secretkeyVaribale: "AWS_SECRET_ACCESS_KEY"]]) {
-             
+                script { 
                     dir("servers-terraform") {
                         powershell "terraform init"
                         powershell "terraform apply -auto-approve"
@@ -28,4 +27,4 @@ pipeline {
     }
 }
 }
-}
+} 
