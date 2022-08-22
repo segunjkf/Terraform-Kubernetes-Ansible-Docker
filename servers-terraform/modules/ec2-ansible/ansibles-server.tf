@@ -26,3 +26,7 @@ resource "aws_instance" "ansible" {
     Name = "ansible"
   }
 }
+
+output "ec2-ip" {
+  value = aws_instance.ansible.public_ip
+}
