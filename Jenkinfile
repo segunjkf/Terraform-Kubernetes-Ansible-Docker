@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    parameters {
+    string(name: 'DEV_ENVIRONMENT', defaultValue: 'development', description: 'development environment')
+    string(name: 'STAGING_ENVIRONMENT', defaultValue: 'staging', description: 'staging environment')
+    string(name: 'PROD_ENVIRONMENT', defaultValue: 'production', description: 'production environment')
+  }
+
     stages {
 
         stage(checkout) {
@@ -24,13 +30,24 @@ pipeline {
                         powershell "terraform apply -auto-approve"
             }
             
-        stage ("building docker image"){
+        stage("building docker image"){
             steps{
                 script{
-                    echo "about to buld docker image"
+                    echo "about to build docker image"
                     powershell "docker build -f Dockerfile -t name/kaytheog/java:${BUILD_NUMBER}"
                     }
                 }
+        stage("pushing docker image to Docker-hub"){
+
+            environment {
+                DOCKER_CREDS = credentials('docker-hub')
+            }
+            steps{
+                script{
+                    echo "about to build docker image"
+                    powershell "docker push -f Dockerfile -t name/kaytheog/java:${BUILD_NUMBER}"
+                    }
+                }        
                     
                 }
             }

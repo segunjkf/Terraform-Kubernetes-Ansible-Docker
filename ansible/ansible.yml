@@ -1,0 +1,9 @@
+---
+ - Hosts: "all"
+   become: true
+   task:
+
+   - name: "install docker"
+     yum:
+        name: 
+         - docker 
