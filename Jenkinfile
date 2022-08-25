@@ -34,7 +34,7 @@ pipeline {
             steps{
                 script{
                     echo "about to build docker image"
-                    powershell "docker build -f Dockerfile -t name/kaytheog/java:${BUILD_NUMBER}"
+                    powershell "docker build -t kaytheog/java:${BUILD_NUMBER} -f Dockerfile ."
                     }
                 }
         stage("pushing docker image to Docker-hub"){
