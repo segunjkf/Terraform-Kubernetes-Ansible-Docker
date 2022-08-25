@@ -2,7 +2,7 @@ FROM tomcat:latest
 RUN cp -R  /usr/local/tomcat/webapps.dist/*  /usr/local/tomcat/webapps
 COPY ./*.war /usr/local/tomcat/webapps
 
-#FROM maven:3.5-jdk-8 AS build  
+#FROM maven:3.5-jdk-11 AS build  
 #COPY server /usr/src/app/server  
 #COPY webapp /usr/src/app/webapp
 #COPY pom.xml /usr/src/app  
