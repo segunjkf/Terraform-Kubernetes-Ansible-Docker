@@ -1,58 +1,51 @@
+
 pipeline {
     agent any
-
     parameters {
     string(name: 'DEV_ENVIRONMENT', defaultValue: 'development', description: 'development environment')
     string(name: 'STAGING_ENVIRONMENT', defaultValue: 'staging', description: 'staging environment')
     string(name: 'PROD_ENVIRONMENT', defaultValue: 'production', description: 'production environment')
-  }
-
+    }
     stages {
-
-        stage(checkout) {
-
+        stage ("checkout") {
             steps{
-            git branch: 'main', credentialsId: '10f2ee8f-0c24-478d-82e4-1f7e1355cfbe', url: 'https://github.com/segunjkf/Terraform-Kubernetes-Ansible-Docker'
+                git branch: 'main', credentialsId: '10f2ee8f-0c24-478d-82e4-1f7e1355cfbe', url: 'https://github.com/segunjkf/Terraform-Kubernetes-Ansible-Docker'
+            }
         }
-
-        }
-
-        stage('setting up infra') {
+        stage("build Infra") {
             environment {
                 AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
                 AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
                 TF_VAR_env_prefix = 'test'
             }
-            steps {
-                script { 
-                    dir("servers-terraform") {
-                        powershell "terraform init"
-                        powershell "terraform apply -auto-approve"
-            }
-            
-        stage("building docker image"){
-            steps{
-                script{
-                    echo "about to build docker image"
-                    powershell "docker build -t kaytheog/java:${BUILD_NUMBER} -f Dockerfile ."
-                    }
-                }
-        stage("pushing docker image to Docker-hub"){
 
-            environment {
-                DOCKER_CREDS = credentials('docker-hub')
+            steps {
+               script {
+                   dir("servers-terraform"){
+                   powershell "terraform init"
+                   powershell "terraform plan"
+                   }
+               }
             }
+        }
+        stage ("Docker Build") { 
+            
             steps{
-                script{
-                    echo "about to build docker image"
-                    powershell "docker push -f Dockerfile -t name/kaytheog/java:${BUILD_NUMBER}"
-                    }
-                }        
-                    
+                script {
+                   echo "About to build docker image"
+                powershell "docker build -t kaytheog/java:${BUILD_NUMBER} -f Dockerfile ."
                 }
             }
         }
+        stage("push to Docker-hub") {
+            environment {
+                DOCKER_CREDS = credentials('docker-hub')
+            }
+
+            steps {
+                echo "about to build docker image"
+                powershell "docker push kaytheog/java:${BUILD_NUMBER}"
+            }
+        }
     }
-}
-}
 }
