@@ -23,7 +23,7 @@ pipeline {
                script {
                    dir("servers-terraform"){
                    powershell "terraform init"
-                   powershell "terraform plan"
+                   powershell "terraform applt -auto"
                    }
                }
             }
