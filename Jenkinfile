@@ -56,7 +56,7 @@ pipeline {
       }
       
             steps {
-                sh 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${DEV_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
+                powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${DEV_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
       }
     }
     }
@@ -67,7 +67,7 @@ pipeline {
           KUBECONFIG = credentials('kubeconfig')
       }
       steps {
-        sh 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${STAGING_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
+        powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${STAGING_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
       }
     }
 
@@ -79,7 +79,7 @@ pipeline {
           KUBECONFIG = credentials('kubeconfig')
       }
       steps {
-        sh 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${PROD_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
+        powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${PROD_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
       }
     }
   }
