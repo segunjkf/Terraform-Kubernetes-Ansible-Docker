@@ -48,5 +48,38 @@ pipeline {
                 powershell "docker push kaytheog/java:${BUILD_NUMBER}"
             }
         }
+
+        stage('Deploy to Dev') {
+            when {branch 'dev'}
+            environment {
+               KUBECONFIG = credentials('kubeconfig')
+      }
+      
+            steps {
+                sh 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${DEV_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
+      }
     }
-}
+    }
+    stage('Deploy to Staging') {
+      when {branch 'dev'}
+      input{message "Deploy staging deployment?"}
+      environment {
+          KUBECONFIG = credentials('kubeconfig')
+      }
+      steps {
+        sh 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${STAGING_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
+      }
+    }
+
+    
+    stage('Deploy to Production') {
+      when {branch 'main'}
+      input{message "Deploy production deployment?"}
+      environment {
+          KUBECONFIG = credentials('kubeconfig')
+      }
+      steps {
+        sh 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${PROD_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
+      }
+    }
+  }
