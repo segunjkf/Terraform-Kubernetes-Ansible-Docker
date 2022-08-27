@@ -23,16 +23,13 @@ pipeline {
                script {
                    dir("servers-terraform"){
                    powershell "terraform init"
-                   powershell "terraform apply -auto-approve"
+                   powershell "terraform plan"
                    }
                }
             }
         }
         stage ("Docker Build") { 
-            environment {
-                DOCKER_CREDS = credentials('docker-hub')
-                DOCKER_CREDS_PSW = credentials("docker-huh-pwd")
-            }
+            
             steps{
                 script {
                    echo "About to build docker image"
@@ -40,13 +37,14 @@ pipeline {
                 }
             }
         }
-        stage("Push to Docker-hub") {
+        stage("push to Docker-hub") {
             environment {
-                DOCKER_CREDS = credentials('docker-hub')
+                DOCKER_CREDS = credentials('docker-creds')
+                DOCKER_CREDS_PSW = credentials("docker_creds_psw")
             }
-
             steps {
-                echo "about to push docker image"
+                echo "about to build docker image"
+                powershell "docker login -u kaytheog -p ${DOCKER_CREDS_PSW}"
                 powershell "docker push kaytheog/java:${BUILD_NUMBER}"
             }
         }
