@@ -56,30 +56,31 @@ pipeline {
       }
       
             steps {
-                powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${DEV_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
+                powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${DEV_ENVIRONMENT} --record deployment/api set image deployment/api api=name/segun:${BUILD_NUMBER}' 
       }
     }
     }
-    stage('Deploy to Staging') {
-      when {branch 'dev'}
-      input{message "Deploy staging deployment?"}
-      environment {
-          KUBECONFIG = credentials('kubeconfig')
+        stage('Deploy to Staging') {
+            when {branch 'dev'}
+            input{message "Deploy staging deployment?"}
+            environment {
+                KUBECONFIG = credentials('kubeconfig')
       }
-      steps {
-        powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${STAGING_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
+            steps {
+
+             powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${STAGING_ENVIRONMENT} --record deployment/api set image deployment/api api=name/segun:${BUILD_NUMBER}' 
       }
     }
 
     
-    stage('Deploy to Production') {
-      when {branch 'main'}
-      input{message "Deploy production deployment?"}
-      environment {
-          KUBECONFIG = credentials('kubeconfig')
+      stage('Deploy to Production') {
+         when {branch 'main'}
+         input{message "Deploy production deployment?"}
+        environment {
+           KUBECONFIG = credentials('kubeconfig')
       }
-      steps {
-        powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${PROD_ENVIRONMENT} --record deployment/api set image deployment/api api=name/samuel:${BUILD_NUMBER}' 
-      }
+        steps {
+            powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${PROD_ENVIRONMENT} --record deployment/api set image deployment/api api=name/segun:${BUILD_NUMBER}' 
+      }    
     }
   }
