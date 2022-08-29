@@ -38,4 +38,7 @@ spec:
     - protocol: TCP
       port: 8080
       targetPort: 8080
+<<<<<<< HEAD
   type: LoadBalancer
+=======
+>>>>>>> 95b9e90e763d113797ff365fc7ac5fc8987c80f5
