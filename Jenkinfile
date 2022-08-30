@@ -51,28 +51,35 @@ pipeline {
 
         stage('Deploy to Dev') {
             when {branch 'dev'}
-            environment {
+            environmen
                KUBECONFIG = credentials('kubeconfig')
       }
       
             steps {
-                powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${DEV_ENVIRONMENT} --record deployment/api set image deployment/api api=name/segun:${BUILD_NUMBER}' 
+                sshagent(['server-ssh-key']) {
+                       powershell "cd kubernetes-files"
+                       powershell "scp -o StrictHostKeyChecking=no deployment ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user"
+                       powershell "ssh ec2-user@${EC2_PUBLIC_IP}" 
+                       powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${DEV_ENVIRONMENT}'
       }
     }
     }
+}
         stage('Deploy to Staging') {
             when {branch 'dev'}
             input{message "Deploy staging deployment?"}
             environment {
-                KUBECONFIG = credentials('kubeconfig')
+                KUBECONFIG = credentials('kubeconfig')                   
       }
             steps {
-
-             powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${STAGING_ENVIRONMENT} --record deployment/api set image deployment/api api=name/segun:${BUILD_NUMBER}' 
+                 sshagent(['server-ssh-key']) {
+                       powershell "cd kubernetes-files"
+                       powershell "scp -o StrictHostKeyChecking=no deployment ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user"
+                       powershell "ssh ec2-user@${EC2_PUBLIC_IP}" 
+                       powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${STAGING_ENVIRONMENT}' 
       }
     }
-
-    
+        }
       stage('Deploy to Production') {
          when {branch 'main'}
          input{message "Deploy production deployment?"}
@@ -80,7 +87,11 @@ pipeline {
            KUBECONFIG = credentials('kubeconfig')
       }
         steps {
-            powershell 'kubectl --kubeconfig=${KUBECONFIG} --namespace=${PROD_ENVIRONMENT} --record deployment/api set image deployment/api api=name/segun:${BUILD_NUMBER}' 
+            sshagent(['server-ssh-key']) {
+                       powershell "cd kubernetes-files"
+                       powershell "scp -o StrictHostKeyChecking=no deployment ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user"
+                       powershell "ssh ec2-user@${EC2_PUBLIC_IP}" 
+                       powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${PROD_ENVIRONMENT}' 
       }    
     }
   }
