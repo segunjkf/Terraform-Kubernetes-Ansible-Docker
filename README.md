@@ -51,15 +51,14 @@ In this section you will need to know.
 > Jenkins Credentials Section.
 
   * Update the version of the image in the kubernetes cluster, e.g.:
-    - `kubectl --kubeconfig=${KUBECONFIG} --namespace=<ENVIRONMENT>
-    set image deployment/api api=name/api:tag`
+    - `kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${ENVIRONMENT}`
 
 > **Note:** This only works from jenkins.
 
 ## Hire me
-Looking for an engineer to build and automate your next application infrastruture/architecture to work remotely? Get in touch: sege.timz12@gmail.com
+Looking for an engineer to build and automate your next application infrastructure/architecture to work remotely? Get in touch: sege.timz12@gmail.com
 
 ## How can I thank you?
 Why not star the Github repo? I'd love the attention! Why not share the link for this repository on Twitter,Hackernews or Destructoid ? Spread the word!
 
-Don't forget to follow me on [twitter](https://twitter.com/kaytheog). Also, you could see other things I do in the software enviroment via my [website](https://github.com/segunjkf)
+Don't forget to follow me on [twitter](https://twitter.com/kaytheog). Also, you could see other things I do in the software environment via my [website](https://github.com/segunjkf)
