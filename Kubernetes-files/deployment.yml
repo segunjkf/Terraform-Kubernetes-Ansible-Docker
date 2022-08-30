@@ -2,8 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: java-deployment
+  namespace: ${{ "namespace" }}
   labels:
-    app: java-application 
+    app: java-application  
 spec:
   replicas: 1
   selector:
