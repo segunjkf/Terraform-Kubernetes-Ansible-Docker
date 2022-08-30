@@ -18,7 +18,6 @@ pipeline {
                 AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
                 TF_VAR_env_prefix = 'test'
             }
-
             steps {
                script {
                    dir("servers-terraform"){
@@ -51,7 +50,7 @@ pipeline {
 
         stage('Deploy to Dev') {
             when {branch 'dev'}
-            environmen
+            environment {
                KUBECONFIG = credentials('kubeconfig')
       }
       
@@ -63,8 +62,7 @@ pipeline {
                        powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${DEV_ENVIRONMENT}'
       }
     }
-    }
-}
+        }
         stage('Deploy to Staging') {
             when {branch 'dev'}
             input{message "Deploy staging deployment?"}
@@ -95,3 +93,5 @@ pipeline {
       }    
     }
   }
+    }
+}
