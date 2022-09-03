@@ -60,6 +60,8 @@ pipeline {
                        powershell "scp -o StrictHostKeyChecking=no deployment ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user"
                        powershell "ssh ec2-user@${EC2_PUBLIC_IP}" 
                        powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${DEV_ENVIRONMENT}'
+                       powershell "kubectl patch deployment java-deployment -p \
+  '{"spec":{"template":{"spec":{"containers":[{"name":"java-application","image":"kaytheog/java:${BUILD_NUMBER}"}]}}}}'"
       }
     }
         }
@@ -74,7 +76,9 @@ pipeline {
                        powershell "cd kubernetes-files"
                        powershell "scp -o StrictHostKeyChecking=no deployment ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user"
                        powershell "ssh ec2-user@${EC2_PUBLIC_IP}" 
-                       powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${STAGING_ENVIRONMENT}' 
+                       powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${STAGING_ENVIRONMENT}'
+                       powershell "kubectl patch deployment java-deployment -p \
+  '{"spec":{"template":{"spec":{"containers":[{"name":"java-application","image":"kaytheog/java:${BUILD_NUMBER}"}]}}}}'" 
       }
     }
         }
@@ -89,7 +93,9 @@ pipeline {
                        powershell "cd kubernetes-files"
                        powershell "scp -o StrictHostKeyChecking=no deployment ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user"
                        powershell "ssh ec2-user@${EC2_PUBLIC_IP}" 
-                       powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${PROD_ENVIRONMENT}' 
+                       powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${PROD_ENVIRONMENT}'
+                       powershell "kubectl patch deployment java-deployment -p \
+  '{"spec":{"template":{"spec":{"containers":[{"name":"java-application","image":"kaytheog/java:${BUILD_NUMBER}"}]}}}}'" 
       }    
     }
   }
