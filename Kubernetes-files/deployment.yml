@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: java-deployment
-  namespace: ${{ "namespace" }}
+#  namespace: ${{ "namespace" }}
   labels:
     app: java-application  
 spec:
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: java-application
-        image: kaytheog/java:latest
+        image: kaytheog/java:69
         resources:
             requests:
               memory: "128Mi"
@@ -26,7 +26,7 @@ spec:
               memory: "128Mi"
               cpu: "512m"
         ports:
-        - containerPort: 8080
+        - containerPort: 8085
 ---
 apiVersion: v1
 kind: Service
@@ -37,7 +37,7 @@ spec:
     app: java-application
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 8085
+      targetPort: 8085
   type: LoadBalancer
 

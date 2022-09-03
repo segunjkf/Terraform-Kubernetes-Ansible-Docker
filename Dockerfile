@@ -13,8 +13,8 @@ RUN mvn -f /usr/src/app/pom.xml clean package
 #
 FROM gcr.io/distroless/java 
 COPY --from=build ./usr/src/app/server/src/main/java/com/example/Greeter.java /usr/app/Greeter.java
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","/usr/app/Greeter.java"]
+EXPOSE 8085
+ENTRYPOINT ["java","-jar"]
 
 
  
