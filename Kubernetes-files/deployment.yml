@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: java-application
-        image: kaytheog/java:69
+        image: nginx:latest
         resources:
             requests:
               memory: "128Mi"
