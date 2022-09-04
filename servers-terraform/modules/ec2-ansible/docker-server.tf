@@ -6,6 +6,7 @@ resource "aws_instance" "docker" {
   vpc_security_group_ids      = var.security_id2
   key_name                    = aws_key_pair.deployer.key_name
   associate_public_ip_address = true
+  
   tags = {
     Name = "docker"
   }
