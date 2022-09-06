@@ -22,6 +22,7 @@ resource "aws_instance" "ansible" {
   user_data                   = file("ec2-userdata.sh")
   key_name                    = aws_key_pair.deployer.key_name
   associate_public_ip_address = true
+  
   tags = {
     Name = "ansible"
   }
