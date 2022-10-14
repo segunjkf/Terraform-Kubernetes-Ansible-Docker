@@ -19,7 +19,7 @@ pipeline {
             }
             steps {
                script {
-                   dir("servers-terraform"){
+                   c
                    powershell "terraform init"
                    powershell "terraform plan"
                    }
@@ -44,25 +44,21 @@ pipeline {
                 echo "about to build docker image"
                 powershell "docker login -u kaytheog -p ${DOCKER_CREDS_PSW}"
                 powershell "docker push kaytheog/java:${BUILD_NUMBER}"
-            }
-        }
+               }
+           }
 
         stage('Deploy to Dev') {
             when {branch 'dev'}
             environment {
                KUBECONFIG = credentials('kubeconfig')
-      }
-      
+        }
             steps {
-                sshagent(['server-ssh-key']) {
-                       powershell "cd kubernetes-files"
-                       powershell "scp -o StrictHostKeyChecking=no deployment ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user"
-                       powershell "ssh ec2-user@${EC2_PUBLIC_IP}" 
-                       powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${DEV_ENVIRONMENT}'
-                       powershell "kubectl set image deployment/java-application java-application=kaytheog/java:${BUILD_NUMBER}"
+                script {
+                    dir("kubernetes-files")
+                    kubernetesDeploy(configs: "deployment.yml", kubeconfigId: "kubernetes")
+        }
       }
     }
-        }
         stage('Deploy to Staging') {
             when {branch 'dev'}
             input{message "Deploy staging deployment?"}
@@ -70,15 +66,13 @@ pipeline {
                 KUBECONFIG = credentials('kubeconfig')                   
       }
             steps {
-                 sshagent(['server-ssh-key']) {
-                       powershell "cd kubernetes-files"
-                       powershell "scp -o StrictHostKeyChecking=no deployment ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user"
-                       powershell "ssh ec2-user@${EC2_PUBLIC_IP}" 
-                       powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${STAGING_ENVIRONMENT}'
-                       powershell "kubectl set image deployment/java-application java-application=kaytheog/java:${BUILD_NUMBER}"
-      }
-    }
+                script {
+                    dir("kubernetes-files")
+                    kubernetesDeploy(configs: "deployment.yml", kubeconfigId: "kubernetes")
+                }
+            }
         }
+    }
       stage('Deploy to Production') {
          when {branch 'main'}
          input{message "Deploy production deployment?"}
@@ -86,14 +80,10 @@ pipeline {
            KUBECONFIG = credentials('kubeconfig')
       }
         steps {
-            sshagent(['server-ssh-key']) {
-                       powershell "cd kubernetes-files"
-                       powershell "scp -o StrictHostKeyChecking=no deployment ec2-user@${EC2_PUBLIC_IP}:/home/ec2-user"
-                       powershell "ssh ec2-user@${EC2_PUBLIC_IP}" 
-                       powershell 'kubectl apply -f deployment.yml --kubeconfig=${KUBECONFIG} namespace=${PROD_ENVIRONMENT}'
-                       powershell "kubectl set image deployment/java-application java-application=kaytheog/java:${BUILD_NUMBER}"
-      }    
+            script {
+                    dir("kubernetes-files")
+                    kubernetesDeploy(configs: "deployment.yml", kubeconfigId: "kubernetes")
+                }
+            }
+        }
     }
-  }
-    }
-}
