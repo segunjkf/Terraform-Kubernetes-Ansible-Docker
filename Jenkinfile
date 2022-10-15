@@ -26,8 +26,7 @@ pipeline {
                }
             }
         }
-        stage ("Docker Build") { 
-            
+        stage ("Docker Build") {   
             steps{
                 script {
                    echo "About to build docker image"
@@ -64,7 +63,7 @@ pipeline {
             input{message "Deploy staging deployment?"}
             environment {
                 KUBECONFIG = credentials('kubeconfig')                   
-      }
+        }
             steps {
                 script {
                     dir("kubernetes-files")
@@ -72,18 +71,18 @@ pipeline {
                 }
             }
         }
-    }
       stage('Deploy to Production') {
          when {branch 'main'}
          input{message "Deploy production deployment?"}
-        environment {
+         environment {
            KUBECONFIG = credentials('kubeconfig')
-      }
-        steps {
-            script {
+        }
+            steps {
+                script {
                     dir("kubernetes-files")
                     kubernetesDeploy(configs: "deployment.yml", kubeconfigId: "kubernetes")
                 }
             }
         }
-    }
+}
+
