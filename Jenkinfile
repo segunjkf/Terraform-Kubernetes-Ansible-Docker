@@ -39,7 +39,7 @@ pipeline {
                 DOCKER_CREDS_PSW = credentials("docker_creds_psw")
             }
             steps {
-                echo "about to build docker image"
+                echo "About to push docker image"
                 powershell "docker login -u kaytheog -p ${DOCKER_CREDS_PSW}"
                 powershell "docker push kaytheog/java:${BUILD_NUMBER}"
                }
