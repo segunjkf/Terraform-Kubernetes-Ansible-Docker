@@ -29,7 +29,7 @@ pipeline {
             steps{
                 script {
                    echo "About to build docker image"
-                   powershell "docker build -t kaytheog/java:${BUILD_NUMBER} -f Dockerfile ."
+                   powershell "docker build -t kaytheog/java:${BUILD_NUMBER} ."
                 }
             }
         }
