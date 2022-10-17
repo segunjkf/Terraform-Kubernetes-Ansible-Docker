@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: java-application
-        image: nginx:latest
+        image: kaytheog/java
         resources:
             requests:
               memory: "128Mi"
@@ -39,4 +39,3 @@ spec:
       port: 80
       targetPort: 8085
   type: LoadBalancer
-
